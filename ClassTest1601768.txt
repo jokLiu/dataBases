@@ -1,0 +1,52 @@
+--1
+SELECT DISTINCT(A1.name)
+FROM Authors A1, Authors A2
+WHERE A1.ISBN = A2.ISBN AND A2.name = 'Gary Cornell'
+ORDERBY A1.name ASC
+
+--2
+SELECT B.borrowerID, B.name
+FROM Borrowers B
+WHERE B.address LIKE '%England%'
+ORDERBY B.borrowerID DESC
+
+--3
+SELECT COUNT(L.borrowerID)
+FROM Loans L
+WHERE L.startDate > '2007-10-01'
+
+--4
+SELECT COUNT(L.ISBN) AS NoLoansForGaryCornell
+FROM Authors A, Loans L
+WHERE A.ISBN = L.ISBN
+
+--5
+SELECT B.ISBN, B.title, COUNT(L.ISBN) AS NumLoans
+FROM Books B, Loans L
+GROUPBY B.ISBN
+ORDERBY NumLoans DESC
+
+--6
+
+
+--7
+SELECT B.borrowerID, B.name, B.debt
+FROM Borrowers B
+WHERE B.dept = MIN{ SELECT Br.debt
+					FROM Borrowers Br
+					}
+--8
+SELECT B.ISBN, B.title 
+FROM Books B, Reservations R
+WHERE B.ISBN NOT IN {SELECT Re.ISBN
+					 FROM Reservation Re		
+					}
+
+--9
+SELECT B.name
+FROM Borrowers B, {SELECT L.borrowerID AS id, COUNT(L.ISBN) AS numLoans
+				   FROM Loans L
+				   GROUP BY L.borrowerID
+					} D
+WHERE 1 <= 
+ORDER BY B.name
